@@ -1,0 +1,182 @@
+openapi: 3.1.1
+info:
+  title: Dragons Counter API
+  description: 中日ドラゴンズ観戦記録API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.dragons-counter.com
+    description: Production server
+
+paths:
+  /games:
+    get:
+      tags:
+        - Games
+      summary: 観戦試合一覧取得
+      operationId: getGames
+      parameters:
+        - name: from
+          in: query
+          description: 開始日
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          description: 終了日
+          schema:
+            type: string
+            format: date
+        - name: result
+          in: query
+          description: 勝敗結果
+          schema:
+            type: string
+            enum: [win, lose, draw]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+    post:
+      tags:
+        - Games
+      summary: 観戦試合登録
+      operationId: createGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGameRequest'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{gameId}:
+    get:
+      tags:
+        - Games
+      summary: 観戦試合詳細取得
+      operationId: getGameById
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: 見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Games
+      summary: 観戦試合更新
+      operationId: updateGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGameRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: 見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Games
+      summary: 観戦試合削除
+      operationId: deleteGame
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 削除成功
+        '404':
+          description: 見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /statistics:
+    get:
+      tags:
+        - Statistics
+      summary: 統計情報取得
+      operationId: getStatistics
+      parameters:
+        - name: year
+          in: query
+          description: 年度
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+
+components:
+  schemas:
+    Game:
+      $ref: './schemas/Game.yaml'
+    CreateGameRequest:
+      $ref: './schemas/CreateGameRequest.yaml'
+    UpdateGameRequest:
+      $ref: './schemas/UpdateGameRequest.yaml'
+    Statistics:
+      $ref: './schemas/Statistics.yaml'
+    Error:
+      $ref: './schemas/Error.yaml'
