@@ -1,0 +1,108 @@
+import { GameId } from '../value-objects/game-id';
+import { Opponent } from '../value-objects/opponent';
+import { Score } from '../value-objects/score';
+import { Stadium } from '../value-objects/stadium';
+import { Notes } from '../value-objects/notes';
+
+export enum GameResult {
+  WIN = 'win',
+  LOSE = 'lose',
+  DRAW = 'draw',
+}
+
+export class Game {
+  private readonly _id: GameId;
+  private readonly _gameDate: Date;
+  private readonly _opponent: Opponent;
+  private readonly _dragonsScore: Score;
+  private readonly _opponentScore: Score;
+  private readonly _stadium: Stadium;
+  private readonly _notes: Notes;
+  private readonly _createdAt: Date;
+  private readonly _updatedAt: Date;
+  private readonly _result: GameResult;
+
+  constructor(
+    id: GameId,
+    gameDate: Date,
+    opponent: Opponent,
+    dragonsScore: Score,
+    opponentScore: Score,
+    stadium: Stadium,
+    notes: Notes,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    this._id = id;
+    this._gameDate = gameDate;
+    this._opponent = opponent;
+    this._dragonsScore = dragonsScore;
+    this._opponentScore = opponentScore;
+    this._stadium = stadium;
+    this._notes = notes;
+    this._createdAt = createdAt;
+    this._updatedAt = updatedAt;
+    this.validateGameDate();
+    this._result = this.determineResult();
+  }
+
+  private validateGameDate(): void {
+    if (this._gameDate > new Date()) {
+      throw new Error('Game date cannot be in the future');
+    }
+  }
+
+  private determineResult(): GameResult {
+    if (this._dragonsScore.isGreaterThan(this._opponentScore)) {
+      return GameResult.WIN;
+    } else if (this._opponentScore.isGreaterThan(this._dragonsScore)) {
+      return GameResult.LOSE;
+    } else {
+      return GameResult.DRAW;
+    }
+  }
+
+  get id(): GameId {
+    return this._id;
+  }
+
+  get gameDate(): Date {
+    return this._gameDate;
+  }
+
+  get opponent(): Opponent {
+    return this._opponent;
+  }
+
+  get dragonsScore(): Score {
+    return this._dragonsScore;
+  }
+
+  get opponentScore(): Score {
+    return this._opponentScore;
+  }
+
+  get stadium(): Stadium {
+    return this._stadium;
+  }
+
+  get notes(): Notes {
+    return this._notes;
+  }
+
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  get result(): GameResult {
+    return this._result;
+  }
+
+  isVictory(): boolean {
+    return this._result === GameResult.WIN;
+  }
+}
