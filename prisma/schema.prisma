@@ -14,16 +14,16 @@ datasource db {
 }
 
 model Game {
-  id            String   @id @default(uuid())
-  gameDate      DateTime @map("game_date")
+  id            String     @id @default(uuid())
+  gameDate      DateTime   @map("game_date")
   opponent      String
-  dragonsScore  Int      @map("dragons_score")
-  opponentScore Int      @map("opponent_score")
+  dragonsScore  Int        @map("dragons_score")
+  opponentScore Int        @map("opponent_score")
   result        GameResult
   stadium       String
   notes         String?
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
 
   @@map("games")
 }
