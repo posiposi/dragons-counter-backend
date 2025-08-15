@@ -21,8 +21,4 @@ export class Score {
   equals(other: Score): boolean {
     return this._value === other._value;
   }
-
-  isGreaterThan(other: Score): boolean {
-    return this._value > other._value;
-  }
 }

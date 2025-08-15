@@ -45,19 +45,4 @@ describe('Score', () => {
       expect(score.value).toBe(12);
     });
   });
-
-  describe('isGreaterThan', () => {
-    it.each([
-      [5, 3, true],
-      [4, 4, false],
-      [2, 6, false],
-    ])(
-      'should return %s when %p compared to %p',
-      (value1, value2, expected) => {
-        const score1 = new Score(value1);
-        const score2 = new Score(value2);
-        expect(score1.isGreaterThan(score2)).toBe(expected);
-      },
-    );
-  });
 });

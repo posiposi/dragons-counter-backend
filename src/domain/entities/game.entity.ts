@@ -3,12 +3,7 @@ import { Opponent } from '../value-objects/opponent';
 import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
 import { Notes } from '../value-objects/notes';
-
-export enum GameResult {
-  WIN = 'win',
-  LOSE = 'lose',
-  DRAW = 'draw',
-}
+import { GameResult } from '../value-objects/game-result';
 
 export class Game {
   private readonly _id: GameId;
@@ -17,7 +12,7 @@ export class Game {
   private readonly _dragonsScore: Score;
   private readonly _opponentScore: Score;
   private readonly _stadium: Stadium;
-  private readonly _notes: Notes;
+  private readonly _notes: Notes | undefined;
   private readonly _createdAt: Date;
   private readonly _updatedAt: Date;
   private readonly _result: GameResult;
@@ -29,7 +24,7 @@ export class Game {
     dragonsScore: Score,
     opponentScore: Score,
     stadium: Stadium,
-    notes: Notes,
+    notes: Notes | undefined,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -53,13 +48,10 @@ export class Game {
   }
 
   private determineResult(): GameResult {
-    if (this._dragonsScore.isGreaterThan(this._opponentScore)) {
-      return GameResult.WIN;
-    } else if (this._opponentScore.isGreaterThan(this._dragonsScore)) {
-      return GameResult.LOSE;
-    } else {
-      return GameResult.DRAW;
-    }
+    return GameResult.fromScores(
+      this._dragonsScore.value,
+      this._opponentScore.value,
+    );
   }
 
   get id(): GameId {
@@ -86,7 +78,7 @@ export class Game {
     return this._stadium;
   }
 
-  get notes(): Notes {
+  get notes(): Notes | undefined {
     return this._notes;
   }
 
@@ -103,6 +95,6 @@ export class Game {
   }
 
   isVictory(): boolean {
-    return this._result === GameResult.WIN;
+    return this._result.isWin();
   }
 }

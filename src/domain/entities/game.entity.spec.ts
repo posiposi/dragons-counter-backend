@@ -1,9 +1,10 @@
-import { Game, GameResult } from './game.entity';
+import { Game } from './game.entity';
 import { GameId } from '../value-objects/game-id';
 import { Opponent } from '../value-objects/opponent';
 import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
 import { Notes } from '../value-objects/notes';
+import { GameResultValue } from '../value-objects/game-result';
 
 describe('Game Entity', () => {
   const validGameData = {
@@ -53,7 +54,7 @@ describe('Game Entity', () => {
       expect(game.opponent).toBe(validGameData.opponent);
       expect(game.dragonsScore).toBe(validGameData.dragonsScore);
       expect(game.opponentScore).toBe(validGameData.opponentScore);
-      expect(game.result).toBe(GameResult.WIN);
+      expect(game.result.value).toBe(GameResultValue.WIN);
       expect(game.stadium).toBe(validGameData.stadium);
     });
 
@@ -62,7 +63,7 @@ describe('Game Entity', () => {
         dragonsScore: new Score(7),
         opponentScore: new Score(3),
       });
-      expect(game.result).toBe(GameResult.WIN);
+      expect(game.result.value).toBe(GameResultValue.WIN);
     });
 
     it('should automatically determine LOSE result when opponent score is higher', () => {
@@ -70,7 +71,7 @@ describe('Game Entity', () => {
         dragonsScore: new Score(2),
         opponentScore: new Score(5),
       });
-      expect(game.result).toBe(GameResult.LOSE);
+      expect(game.result.value).toBe(GameResultValue.LOSE);
     });
 
     it('should automatically determine DRAW result when scores are equal', () => {
@@ -78,7 +79,7 @@ describe('Game Entity', () => {
         dragonsScore: new Score(4),
         opponentScore: new Score(4),
       });
-      expect(game.result).toBe(GameResult.DRAW);
+      expect(game.result.value).toBe(GameResultValue.DRAW);
     });
 
     it('should throw error for future game date', () => {
