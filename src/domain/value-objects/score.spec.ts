@@ -7,7 +7,7 @@ describe('Score', () => {
         'should create a valid Score with %p',
         (value) => {
           const score = new Score(value);
-          expect(score.getValue()).toBe(value);
+          expect(score.value).toBe(value);
         },
       );
     });
@@ -39,10 +39,10 @@ describe('Score', () => {
     });
   });
 
-  describe('getValue', () => {
+  describe('value getter', () => {
     it('should return the internal value', () => {
       const score = new Score(12);
-      expect(score.getValue()).toBe(12);
+      expect(score.value).toBe(12);
     });
   });
 

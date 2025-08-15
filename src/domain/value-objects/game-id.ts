@@ -1,18 +1,18 @@
 export class GameId {
-  private readonly value: string;
+  private readonly _value: string;
 
   constructor(value: string) {
     if (!value || value.trim() === '') {
       throw new Error('Game ID cannot be empty');
     }
-    this.value = value;
+    this._value = value;
   }
 
-  getValue(): string {
-    return this.value;
+  get value(): string {
+    return this._value;
   }
 
   equals(other: GameId): boolean {
-    return this.value === other.getValue();
+    return this._value === other._value;
   }
 }

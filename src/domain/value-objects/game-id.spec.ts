@@ -4,7 +4,7 @@ describe('GameId', () => {
   describe('constructor', () => {
     it('should create a valid GameId with non-empty string', () => {
       const gameId = new GameId('test-id-123');
-      expect(gameId.getValue()).toBe('test-id-123');
+      expect(gameId.value).toBe('test-id-123');
     });
 
     it('should throw error for empty string', () => {
@@ -38,10 +38,10 @@ describe('GameId', () => {
     });
   });
 
-  describe('getValue', () => {
+  describe('value getter', () => {
     it('should return the internal value', () => {
       const gameId = new GameId('test-value');
-      expect(gameId.getValue()).toBe('test-value');
+      expect(gameId.value).toBe('test-value');
     });
   });
 });

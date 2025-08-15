@@ -1,23 +1,23 @@
 export class Notes {
-  private readonly value: string | undefined;
+  private readonly _value: string | undefined;
 
   constructor(value: string | undefined | null) {
     if (value === null || value === undefined || value.trim() === '') {
-      this.value = undefined;
+      this._value = undefined;
     } else {
-      this.value = value.trim();
+      this._value = value.trim();
     }
   }
 
-  getValue(): string | undefined {
-    return this.value;
+  get value(): string | undefined {
+    return this._value;
   }
 
   isEmpty(): boolean {
-    return this.value === undefined;
+    return this._value === undefined;
   }
 
   equals(other: Notes): boolean {
-    return this.value === other.getValue();
+    return this._value === other._value;
   }
 }

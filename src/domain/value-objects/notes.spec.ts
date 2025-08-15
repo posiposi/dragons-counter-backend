@@ -13,22 +13,22 @@ describe('Notes', () => {
         const notes = new Notes(value);
         if (value === undefined || value === null || value === '') {
           expect(notes.isEmpty()).toBe(true);
-          expect(notes.getValue()).toBeUndefined();
+          expect(notes.value).toBeUndefined();
         } else {
           expect(notes.isEmpty()).toBe(false);
-          expect(notes.getValue()).toBe(value);
+          expect(notes.value).toBe(value);
         }
       });
 
       it('should trim whitespace for non-empty values', () => {
         const notes = new Notes('  今日は勝利！  ');
-        expect(notes.getValue()).toBe('今日は勝利！');
+        expect(notes.value).toBe('今日は勝利！');
       });
 
       it('should treat whitespace-only as empty', () => {
         const notes = new Notes('   ');
         expect(notes.isEmpty()).toBe(true);
-        expect(notes.getValue()).toBeUndefined();
+        expect(notes.value).toBeUndefined();
       });
     });
   });
@@ -65,7 +65,7 @@ describe('Notes', () => {
     });
   });
 
-  describe('getValue', () => {
+  describe('value getter', () => {
     it.each([
       ['試合メモ', '試合メモ'],
       [undefined, undefined],
@@ -73,7 +73,7 @@ describe('Notes', () => {
       ['', undefined],
     ])('should return %s for input %p', (input, expected) => {
       const notes = new Notes(input);
-      expect(notes.getValue()).toBe(expected);
+      expect(notes.value).toBe(expected);
     });
   });
 });

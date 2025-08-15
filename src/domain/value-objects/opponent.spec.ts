@@ -4,12 +4,12 @@ describe('Opponent', () => {
   describe('constructor', () => {
     it('should create a valid Opponent with non-empty string', () => {
       const opponent = new Opponent('阪神タイガース');
-      expect(opponent.getValue()).toBe('阪神タイガース');
+      expect(opponent.value).toBe('阪神タイガース');
     });
 
     it('should create a valid Opponent with English team name', () => {
       const opponent = new Opponent('Giants');
-      expect(opponent.getValue()).toBe('Giants');
+      expect(opponent.value).toBe('Giants');
     });
 
     it('should throw error for empty string', () => {
@@ -36,7 +36,7 @@ describe('Opponent', () => {
 
     it('should trim whitespace', () => {
       const opponent = new Opponent('  中日ドラゴンズ  ');
-      expect(opponent.getValue()).toBe('中日ドラゴンズ');
+      expect(opponent.value).toBe('中日ドラゴンズ');
     });
   });
 
@@ -60,10 +60,10 @@ describe('Opponent', () => {
     });
   });
 
-  describe('getValue', () => {
+  describe('value getter', () => {
     it('should return the internal value', () => {
       const opponent = new Opponent('ヤクルトスワローズ');
-      expect(opponent.getValue()).toBe('ヤクルトスワローズ');
+      expect(opponent.value).toBe('ヤクルトスワローズ');
     });
   });
 });

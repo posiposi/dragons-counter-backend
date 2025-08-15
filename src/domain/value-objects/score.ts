@@ -1,5 +1,5 @@
 export class Score {
-  private readonly value: number;
+  private readonly _value: number;
 
   constructor(value: number) {
     if (value === undefined || value === null || Number.isNaN(value)) {
@@ -11,18 +11,18 @@ export class Score {
     if (value < 0) {
       throw new Error('Score cannot be negative');
     }
-    this.value = value;
+    this._value = value;
   }
 
-  getValue(): number {
-    return this.value;
+  get value(): number {
+    return this._value;
   }
 
   equals(other: Score): boolean {
-    return this.value === other.getValue();
+    return this._value === other._value;
   }
 
   isGreaterThan(other: Score): boolean {
-    return this.value > other.getValue();
+    return this._value > other._value;
   }
 }

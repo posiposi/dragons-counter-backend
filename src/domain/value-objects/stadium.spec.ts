@@ -10,12 +10,12 @@ describe('Stadium', () => {
         ['Nagoya Dome'],
       ])('should create a valid Stadium with %p', (value) => {
         const stadium = new Stadium(value);
-        expect(stadium.getValue()).toBe(value);
+        expect(stadium.value).toBe(value);
       });
 
       it('should trim whitespace', () => {
         const stadium = new Stadium('  マツダスタジアム  ');
-        expect(stadium.getValue()).toBe('マツダスタジアム');
+        expect(stadium.value).toBe('マツダスタジアム');
       });
     });
 
@@ -45,10 +45,10 @@ describe('Stadium', () => {
     });
   });
 
-  describe('getValue', () => {
+  describe('value getter', () => {
     it('should return the internal value', () => {
       const stadium = new Stadium('楽天モバイルパーク');
-      expect(stadium.getValue()).toBe('楽天モバイルパーク');
+      expect(stadium.value).toBe('楽天モバイルパーク');
     });
   });
 });
