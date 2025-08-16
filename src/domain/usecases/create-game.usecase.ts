@@ -1,16 +1,20 @@
-import { Game } from '../../domain/entities/game';
-import { GameId } from '../../domain/value-objects/game-id';
-import { Opponent } from '../../domain/value-objects/opponent';
-import { Score } from '../../domain/value-objects/score';
-import { Stadium } from '../../domain/value-objects/stadium';
-import { Notes } from '../../domain/value-objects/notes';
-import { GameDate } from '../../domain/value-objects/game-date';
-import { GameRepository } from '../interfaces/game-repository.interface';
-import { CreateGameRequest } from '../dtos/create-game.dto';
+import { Game } from '../entities/game';
+import { GameId } from '../value-objects/game-id';
+import { Opponent } from '../value-objects/opponent';
+import { Score } from '../value-objects/score';
+import { Stadium } from '../value-objects/stadium';
+import { Notes } from '../value-objects/notes';
+import { GameDate } from '../value-objects/game-date';
+import type { GameRepository } from '../../application/interfaces/game-repository.interface';
+import { CreateGameRequest } from '../../application/dtos/create-game.dto';
 import { randomUUID } from 'crypto';
+import { Inject } from '@nestjs/common';
 
 export class CreateGameUseCase {
-  constructor(private readonly gameRepository: GameRepository) {}
+  constructor(
+    @Inject('GameRepository')
+    private readonly gameRepository: GameRepository,
+  ) {}
 
   async execute(request: CreateGameRequest): Promise<Game> {
     const gameDate = this.parseGameDate(request.gameDate);

@@ -1,14 +1,14 @@
 import { CreateGameUseCase } from './create-game.usecase';
-import { Game } from '../../domain/entities/game';
-import { GameResultValue } from '../../domain/value-objects/game-result';
-import { GameDate } from '../../domain/value-objects/game-date';
-import { GameId } from '../../domain/value-objects/game-id';
-import { Opponent } from '../../domain/value-objects/opponent';
-import { Score } from '../../domain/value-objects/score';
-import { Stadium } from '../../domain/value-objects/stadium';
-import { Notes } from '../../domain/value-objects/notes';
-import { GameRepository } from '../interfaces/game-repository.interface';
-import { CreateGameRequest } from '../dtos/create-game.dto';
+import { Game } from '../entities/game';
+import { GameResultValue } from '../value-objects/game-result';
+import { GameDate } from '../value-objects/game-date';
+import { GameId } from '../value-objects/game-id';
+import { Opponent } from '../value-objects/opponent';
+import { Score } from '../value-objects/score';
+import { Stadium } from '../value-objects/stadium';
+import { Notes } from '../value-objects/notes';
+import { GameRepository } from '../../application/interfaces/game-repository.interface';
+import { CreateGameRequest } from '../../application/dtos/create-game.dto';
 
 describe('CreateGameUseCase', () => {
   let useCase: CreateGameUseCase;
