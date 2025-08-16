@@ -8,6 +8,7 @@ import { Opponent } from '../value-objects/opponent';
 import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
 import { Notes } from '../value-objects/notes';
+import { GameResponseDto } from '../../application/dto/response/game-response.dto';
 
 describe('GetGamesUsecase', () => {
   let usecase: GetGamesUsecase;
@@ -63,7 +64,34 @@ describe('GetGamesUsecase', () => {
 
       const result = await usecase.execute();
 
-      expect(result).toEqual(mockGames);
+      const expectedDto: GameResponseDto[] = [
+        {
+          id: 'game-1',
+          gameDate: '2024-06-01',
+          opponent: '巨人',
+          dragonsScore: 5,
+          opponentScore: 3,
+          result: 'win',
+          stadium: 'バンテリンドーム',
+          notes: '逆転勝利！',
+          createdAt: '2024-06-01T10:00:00.000Z',
+          updatedAt: '2024-06-01T10:00:00.000Z',
+        },
+        {
+          id: 'game-2',
+          gameDate: '2024-06-02',
+          opponent: '阪神',
+          dragonsScore: 2,
+          opponentScore: 4,
+          result: 'lose',
+          stadium: '甲子園',
+          notes: '接戦でした',
+          createdAt: '2024-06-02T10:00:00.000Z',
+          updatedAt: '2024-06-02T10:00:00.000Z',
+        },
+      ];
+
+      expect(result).toEqual(expectedDto);
       expect(findAllSpy).toHaveBeenCalledTimes(1);
       expect(findAllSpy).toHaveBeenCalledWith();
     });

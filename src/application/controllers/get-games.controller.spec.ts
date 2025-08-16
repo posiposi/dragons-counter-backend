@@ -1,13 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetGamesController } from './get-games.controller';
 import { GetGamesUsecase } from '../../domain/usecases/get-games.usecase';
-import { Game } from '../../domain/entities/game';
-import { GameId } from '../../domain/value-objects/game-id';
-import { GameDate } from '../../domain/value-objects/game-date';
-import { Opponent } from '../../domain/value-objects/opponent';
-import { Score } from '../../domain/value-objects/score';
-import { Stadium } from '../../domain/value-objects/stadium';
-import { Notes } from '../../domain/value-objects/notes';
+import { GameResponseDto } from '../dto/response/game-response.dto';
 
 describe('GetGamesController', () => {
   let controller: GetGamesController;
@@ -32,62 +26,42 @@ describe('GetGamesController', () => {
 
   describe('getGames', () => {
     it('should return all games', async () => {
-      const mockGames: Game[] = [
-        new Game(
-          new GameId('game-1'),
-          new GameDate(new Date('2024-06-01')),
-          new Opponent('巨人'),
-          new Score(5),
-          new Score(3),
-          new Stadium('バンテリンドーム'),
-          new Notes('逆転勝利！'),
-          new Date('2024-06-01T10:00:00Z'),
-          new Date('2024-06-01T10:00:00Z'),
-        ),
-        new Game(
-          new GameId('game-2'),
-          new GameDate(new Date('2024-06-02')),
-          new Opponent('阪神'),
-          new Score(2),
-          new Score(4),
-          new Stadium('甲子園'),
-          new Notes('接戦でした'),
-          new Date('2024-06-02T10:00:00Z'),
-          new Date('2024-06-02T10:00:00Z'),
-        ),
+      const mockGamesDto: GameResponseDto[] = [
+        {
+          id: 'game-1',
+          gameDate: '2024-06-01',
+          opponent: '巨人',
+          dragonsScore: 5,
+          opponentScore: 3,
+          result: 'win',
+          stadium: 'バンテリンドーム',
+          notes: '逆転勝利！',
+          createdAt: '2024-06-01T10:00:00.000Z',
+          updatedAt: '2024-06-01T10:00:00.000Z',
+        },
+        {
+          id: 'game-2',
+          gameDate: '2024-06-02',
+          opponent: '阪神',
+          dragonsScore: 2,
+          opponentScore: 4,
+          result: 'lose',
+          stadium: '甲子園',
+          notes: '接戦でした',
+          createdAt: '2024-06-02T10:00:00.000Z',
+          updatedAt: '2024-06-02T10:00:00.000Z',
+        },
       ];
 
       const executeSpy = jest
         .spyOn(usecase, 'execute')
-        .mockResolvedValue(mockGames);
+        .mockResolvedValue(mockGamesDto);
 
       const result = await controller.getGames();
 
       expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({
-        id: 'game-1',
-        gameDate: '2024-06-01',
-        opponent: '巨人',
-        dragonsScore: 5,
-        opponentScore: 3,
-        result: 'win',
-        stadium: 'バンテリンドーム',
-        notes: '逆転勝利！',
-        createdAt: '2024-06-01T10:00:00.000Z',
-        updatedAt: '2024-06-01T10:00:00.000Z',
-      });
-      expect(result[1]).toEqual({
-        id: 'game-2',
-        gameDate: '2024-06-02',
-        opponent: '阪神',
-        dragonsScore: 2,
-        opponentScore: 4,
-        result: 'lose',
-        stadium: '甲子園',
-        notes: '接戦でした',
-        createdAt: '2024-06-02T10:00:00.000Z',
-        updatedAt: '2024-06-02T10:00:00.000Z',
-      });
+      expect(result[0]).toEqual(mockGamesDto[0]);
+      expect(result[1]).toEqual(mockGamesDto[1]);
       expect(executeSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -101,25 +75,25 @@ describe('GetGamesController', () => {
     });
 
     it('should handle null notes correctly', async () => {
-      const mockGames: Game[] = [
-        new Game(
-          new GameId('game-1'),
-          new GameDate(new Date('2024-06-01')),
-          new Opponent('巨人'),
-          new Score(5),
-          new Score(3),
-          new Stadium('バンテリンドーム'),
-          undefined,
-          new Date('2024-06-01T10:00:00Z'),
-          new Date('2024-06-01T10:00:00Z'),
-        ),
+      const mockGamesDto: GameResponseDto[] = [
+        {
+          id: 'game-1',
+          gameDate: '2024-06-01',
+          opponent: '巨人',
+          dragonsScore: 5,
+          opponentScore: 3,
+          result: 'win',
+          stadium: 'バンテリンドーム',
+          notes: null,
+          createdAt: '2024-06-01T10:00:00.000Z',
+          updatedAt: '2024-06-01T10:00:00.000Z',
+        },
       ];
 
-      jest.spyOn(usecase, 'execute').mockResolvedValue(mockGames);
+      jest.spyOn(usecase, 'execute').mockResolvedValue(mockGamesDto);
 
       const result = await controller.getGames();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       expect(result[0]?.notes).toBeNull();
     });
   });
