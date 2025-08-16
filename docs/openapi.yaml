@@ -4,7 +4,7 @@ info:
   description: 中日ドラゴンズ観戦記録API
   version: 1.0.0
 servers:
-  - url: http://localhost:3000/api
+  - url: http://localhost:3000
     description: Development server
   - url: https://api.dragons-counter.com
     description: Production server
@@ -15,26 +15,8 @@ paths:
       tags:
         - Games
       summary: 観戦試合一覧取得
+      description: 登録されているすべての観戦試合記録を取得します
       operationId: getGames
-      parameters:
-        - name: from
-          in: query
-          description: 開始日
-          schema:
-            type: string
-            format: date
-        - name: to
-          in: query
-          description: 終了日
-          schema:
-            type: string
-            format: date
-        - name: result
-          in: query
-          description: 勝敗結果
-          schema:
-            type: string
-            enum: [win, lose, draw]
       responses:
         '200':
           description: 成功
@@ -48,6 +30,7 @@ paths:
       tags:
         - Games
       summary: 観戦試合登録
+      description: 新しい観戦試合記録を登録します。試合日は未来の日付を指定することはできません。
       operationId: createGame
       requestBody:
         required: true
@@ -64,6 +47,12 @@ paths:
                 $ref: '#/components/schemas/Game'
         '400':
           description: リクエスト不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: サーバーエラー
           content:
             application/json:
               schema:
