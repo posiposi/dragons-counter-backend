@@ -5,15 +5,15 @@ import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
 import { Notes } from '../value-objects/notes';
 import { GameDate } from '../value-objects/game-date';
-import type { GameRepository } from '../../application/interfaces/game-repository.interface';
-import { CreateGameRequest } from '../../application/dtos/create-game.dto';
+import type { GamePort } from '../ports/game.port';
+import { CreateGameRequest } from '../../application/dto/request/create-game.dto';
 import { randomUUID } from 'crypto';
 import { Inject } from '@nestjs/common';
 
 export class CreateGameUseCase {
   constructor(
-    @Inject('GameRepository')
-    private readonly gameRepository: GameRepository,
+    @Inject('GamePort')
+    private readonly gamePort: GamePort,
   ) {}
 
   async execute(request: CreateGameRequest): Promise<Game> {
@@ -31,7 +31,7 @@ export class CreateGameUseCase {
       new Date(),
     );
 
-    return await this.gameRepository.save(game);
+    return await this.gamePort.save(game);
   }
 
   private parseGameDate(dateString: string): Date {

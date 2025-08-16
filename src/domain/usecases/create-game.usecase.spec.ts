@@ -7,18 +7,18 @@ import { Opponent } from '../value-objects/opponent';
 import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
 import { Notes } from '../value-objects/notes';
-import { GameRepository } from '../../application/interfaces/game-repository.interface';
-import { CreateGameRequest } from '../../application/dtos/create-game.dto';
+import { GamePort } from '../ports/game.port';
+import { CreateGameRequest } from '../../application/dto/request/create-game.dto';
 
 describe('CreateGameUseCase', () => {
   let useCase: CreateGameUseCase;
-  let mockRepository: jest.Mocked<GameRepository>;
+  let mockPort: jest.Mocked<GamePort>;
 
   beforeEach(() => {
-    mockRepository = {
+    mockPort = {
       save: jest.fn(),
     };
-    useCase = new CreateGameUseCase(mockRepository);
+    useCase = new CreateGameUseCase(mockPort);
   });
 
   describe('execute', () => {
@@ -64,7 +64,7 @@ describe('CreateGameUseCase', () => {
           new Date(),
         );
 
-        mockRepository.save.mockResolvedValue(mockSavedGame);
+        mockPort.save.mockResolvedValue(mockSavedGame);
 
         const result = await useCase.execute(request);
 
@@ -107,7 +107,7 @@ describe('CreateGameUseCase', () => {
           new Date(),
         );
 
-        mockRepository.save.mockResolvedValue(mockSavedGame);
+        mockPort.save.mockResolvedValue(mockSavedGame);
 
         const result = await useCase.execute(request);
 
@@ -157,7 +157,7 @@ describe('CreateGameUseCase', () => {
           stadium: 'バンテリンドーム ナゴヤ',
         };
 
-        mockRepository.save.mockRejectedValue(new Error('Database error'));
+        mockPort.save.mockRejectedValue(new Error('Database error'));
 
         await expect(() => useCase.execute(request)).rejects.toThrow(
           'Database error',

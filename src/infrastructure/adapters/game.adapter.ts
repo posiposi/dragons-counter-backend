@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GamePort } from '../../domain/ports/game.port';
 import { PrismaClient, Game as PrismaGame } from '@prisma/client';
 import { Game } from '../../domain/entities/game';
 import { GameId } from '../../domain/value-objects/game-id';
@@ -9,7 +10,7 @@ import { Notes } from '../../domain/value-objects/notes';
 import { GameDate } from '../../domain/value-objects/game-date';
 
 @Injectable()
-export class GameRepository {
+export class GameAdapter implements GamePort {
   constructor(private readonly prisma: PrismaClient) {}
 
   async save(game: Game): Promise<Game> {

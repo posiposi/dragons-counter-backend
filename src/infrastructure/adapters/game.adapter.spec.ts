@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../infrastructure/prisma/prisma.service';
-import { GameRepository } from './game.repository';
-import { Game } from '../entities/game';
-import { GameId } from '../value-objects/game-id';
-import { Score } from '../value-objects/score';
-import { Opponent } from '../value-objects/opponent';
-import { Stadium } from '../value-objects/stadium';
-import { Notes } from '../value-objects/notes';
-import { GameDate } from '../value-objects/game-date';
-import { GameResultValue } from '../value-objects/game-result';
+import { PrismaService } from '../prisma/prisma.service';
+import { GameAdapter } from './game.adapter';
+import { Game } from '../../domain/entities/game';
+import { GameId } from '../../domain/value-objects/game-id';
+import { Score } from '../../domain/value-objects/score';
+import { Opponent } from '../../domain/value-objects/opponent';
+import { Stadium } from '../../domain/value-objects/stadium';
+import { Notes } from '../../domain/value-objects/notes';
+import { GameDate } from '../../domain/value-objects/game-date';
+import { GameResultValue } from '../../domain/value-objects/game-result';
 import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
-describe('GameRepository Integration Tests', () => {
+describe('GameAdapter Integration Tests', () => {
   let prismaService: PrismaService;
   let module: TestingModule;
   let prismaClient: PrismaClient;
@@ -20,7 +20,7 @@ describe('GameRepository Integration Tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       providers: [
-        GameRepository,
+        GameAdapter,
         PrismaService,
         {
           provide: PrismaClient,
@@ -100,8 +100,8 @@ describe('GameRepository Integration Tests', () => {
                 gameData.date,
               );
 
-              const repository = new GameRepository(tx as PrismaClient);
-              const result = await repository.save(game);
+              const adapter = new GameAdapter(tx as PrismaClient);
+              const result = await adapter.save(game);
 
               expect(result).toBeInstanceOf(Game);
               expect(result.id.value).toBe(gameId.value);
