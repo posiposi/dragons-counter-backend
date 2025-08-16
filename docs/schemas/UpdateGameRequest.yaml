@@ -14,4 +14,5 @@ properties:
   stadium:
     type: string
   notes:
-    type: ['string', 'null']
+    type: string
+    nullable: true

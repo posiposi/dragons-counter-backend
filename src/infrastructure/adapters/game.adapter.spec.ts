@@ -145,4 +145,83 @@ describe('GameAdapter Integration Tests', () => {
       },
     );
   });
+
+  describe('findAll', () => {
+    const testGames = [
+      {
+        description: 'first game - WIN',
+        gameData: {
+          date: new Date('2024-04-01'),
+          opponent: '横浜DeNAベイスターズ',
+          stadium: 'バンテリンドーム',
+          dragonsScore: 5,
+          opponentScore: 3,
+          notes: '開幕戦で勝利！',
+        },
+        expectedResult: GameResultValue.WIN,
+      },
+      {
+        description: 'second game - LOSE',
+        gameData: {
+          date: new Date('2024-04-03'),
+          opponent: '阪神タイガース',
+          stadium: '甲子園',
+          dragonsScore: 2,
+          opponentScore: 7,
+          notes: '大敗',
+        },
+        expectedResult: GameResultValue.LOSE,
+      },
+    ];
+
+    it('should return all games ordered by gameDate desc', async () => {
+      await prismaService.game.deleteMany();
+
+      const savedGameIds: string[] = [];
+
+      for (const { gameData, expectedResult } of testGames) {
+        const gameId = randomUUID();
+        await prismaService.game.create({
+          data: {
+            id: gameId,
+            gameDate: gameData.date,
+            opponent: gameData.opponent,
+            stadium: gameData.stadium,
+            dragonsScore: gameData.dragonsScore,
+            opponentScore: gameData.opponentScore,
+            result: expectedResult,
+            notes: gameData.notes,
+          },
+        });
+        savedGameIds.push(gameId);
+      }
+
+      const adapter = new GameAdapter(prismaClient);
+      const result = await adapter.findAll();
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toBeInstanceOf(Game);
+
+      expect(result[0].gameDate.value).toEqual(new Date('2024-04-03'));
+      expect(result[0].opponent.value).toBe('阪神タイガース');
+      expect(result[0].stadium.value).toBe('甲子園');
+      expect(result[0].dragonsScore.value).toBe(2);
+      expect(result[0].opponentScore.value).toBe(7);
+      expect(result[0].result.value).toBe(GameResultValue.LOSE);
+      expect(result[0].notes?.value).toBe('大敗');
+
+      expect(result[1].gameDate.value).toEqual(new Date('2024-04-01'));
+      expect(result[1].opponent.value).toBe('横浜DeNAベイスターズ');
+      expect(result[1].result.value).toBe(GameResultValue.WIN);
+    });
+
+    it('should return empty array when no games exist', async () => {
+      await prismaService.game.deleteMany();
+
+      const adapter = new GameAdapter(prismaClient);
+      const result = await adapter.findAll();
+
+      expect(result).toEqual([]);
+    });
+  });
 });

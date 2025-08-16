@@ -43,6 +43,16 @@ export class GameAdapter implements GamePort {
     return this.toDomainEntity(savedGame);
   }
 
+  async findAll(): Promise<Game[]> {
+    const games = await this.prisma.game.findMany({
+      orderBy: {
+        gameDate: 'desc',
+      },
+    });
+
+    return games.map((game) => this.toDomainEntity(game));
+  }
+
   private toDomainEntity(data: PrismaGame): Game {
     return new Game(
       new GameId(data.id),
