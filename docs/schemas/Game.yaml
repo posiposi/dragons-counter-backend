@@ -37,7 +37,8 @@ properties:
     type: string
     description: 球場
   notes:
-    type: ["string", "null"]
+    type: string
+    nullable: true
     description: メモ
   createdAt:
     type: string
