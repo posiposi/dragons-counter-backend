@@ -1,5 +1,6 @@
-import { Game } from './game.entity';
+import { Game } from './game';
 import { GameId } from '../value-objects/game-id';
+import { GameDate } from '../value-objects/game-date';
 import { Opponent } from '../value-objects/opponent';
 import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
@@ -9,7 +10,7 @@ import { GameResultValue } from '../value-objects/game-result';
 describe('Game Entity', () => {
   const validGameData = {
     id: new GameId('test-id'),
-    gameDate: new Date('2024-08-01'),
+    gameDate: new GameDate(new Date('2024-08-01')),
     opponent: new Opponent('読売ジャイアンツ'),
     dragonsScore: new Score(5),
     opponentScore: new Score(3),
@@ -22,7 +23,7 @@ describe('Game Entity', () => {
   const createGame = (
     overrides: Partial<{
       id: GameId;
-      gameDate: Date;
+      gameDate: GameDate;
       opponent: Opponent;
       dragonsScore: Score;
       opponentScore: Score;
@@ -85,7 +86,7 @@ describe('Game Entity', () => {
     it('should throw error for future game date', () => {
       expect(() => {
         createGame({
-          gameDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          gameDate: new GameDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
         });
       }).toThrow('Game date cannot be in the future');
     });

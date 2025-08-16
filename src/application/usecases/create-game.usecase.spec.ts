@@ -1,5 +1,7 @@
 import { CreateGameUseCase } from './create-game.usecase';
-import { Game, GameResult } from '../../domain/entities/game.entity';
+import { Game } from '../../domain/entities/game';
+import { GameResultValue } from '../../domain/value-objects/game-result';
+import { GameDate } from '../../domain/value-objects/game-date';
 import { GameId } from '../../domain/value-objects/game-id';
 import { Opponent } from '../../domain/value-objects/opponent';
 import { Score } from '../../domain/value-objects/score';
@@ -25,19 +27,19 @@ describe('CreateGameUseCase', () => {
         description: 'Dragons win game',
         dragonsScore: 5,
         opponentScore: 3,
-        expectedResult: GameResult.WIN,
+        expectedResult: GameResultValue.WIN,
       },
       {
         description: 'Dragons lose game',
         dragonsScore: 2,
         opponentScore: 4,
-        expectedResult: GameResult.LOSE,
+        expectedResult: GameResultValue.LOSE,
       },
       {
         description: 'Draw game',
         dragonsScore: 3,
         opponentScore: 3,
-        expectedResult: GameResult.DRAW,
+        expectedResult: GameResultValue.DRAW,
       },
     ])('$description', ({ dragonsScore, opponentScore, expectedResult }) => {
       it(`should create and save a game with result ${expectedResult}`, async () => {
@@ -52,7 +54,7 @@ describe('CreateGameUseCase', () => {
 
         const mockSavedGame = new Game(
           new GameId('test-id'),
-          new Date('2024-01-15'),
+          new GameDate(new Date('2024-01-15')),
           new Opponent('阪神タイガース'),
           new Score(dragonsScore),
           new Score(opponentScore),
@@ -67,7 +69,7 @@ describe('CreateGameUseCase', () => {
         const result = await useCase.execute(request);
 
         expect(result).toBe(mockSavedGame);
-        expect(result.result).toBe(expectedResult);
+        expect(result.result.value).toBe(expectedResult);
       });
     });
 
@@ -95,7 +97,7 @@ describe('CreateGameUseCase', () => {
 
         const mockSavedGame = new Game(
           new GameId('test-id'),
-          new Date('2024-01-15'),
+          new GameDate(new Date('2024-01-15')),
           new Opponent('阪神タイガース'),
           new Score(5),
           new Score(3),

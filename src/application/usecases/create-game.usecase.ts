@@ -1,9 +1,10 @@
-import { Game } from '../../domain/entities/game.entity';
+import { Game } from '../../domain/entities/game';
 import { GameId } from '../../domain/value-objects/game-id';
 import { Opponent } from '../../domain/value-objects/opponent';
 import { Score } from '../../domain/value-objects/score';
 import { Stadium } from '../../domain/value-objects/stadium';
 import { Notes } from '../../domain/value-objects/notes';
+import { GameDate } from '../../domain/value-objects/game-date';
 import { GameRepository } from '../interfaces/game-repository.interface';
 import { CreateGameRequest } from '../dtos/create-game.dto';
 import { randomUUID } from 'crypto';
@@ -16,7 +17,7 @@ export class CreateGameUseCase {
 
     const game = new Game(
       new GameId(randomUUID()),
-      gameDate,
+      new GameDate(gameDate),
       new Opponent(request.opponent),
       new Score(request.dragonsScore),
       new Score(request.opponentScore),

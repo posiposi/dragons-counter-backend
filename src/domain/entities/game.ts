@@ -1,4 +1,5 @@
 import { GameId } from '../value-objects/game-id';
+import { GameDate } from '../value-objects/game-date';
 import { Opponent } from '../value-objects/opponent';
 import { Score } from '../value-objects/score';
 import { Stadium } from '../value-objects/stadium';
@@ -7,7 +8,7 @@ import { GameResult } from '../value-objects/game-result';
 
 export class Game {
   private readonly _id: GameId;
-  private readonly _gameDate: Date;
+  private readonly _gameDate: GameDate;
   private readonly _opponent: Opponent;
   private readonly _dragonsScore: Score;
   private readonly _opponentScore: Score;
@@ -19,7 +20,7 @@ export class Game {
 
   constructor(
     id: GameId,
-    gameDate: Date,
+    gameDate: GameDate,
     opponent: Opponent,
     dragonsScore: Score,
     opponentScore: Score,
@@ -42,9 +43,7 @@ export class Game {
   }
 
   private validateGameDate(): void {
-    if (this._gameDate > new Date()) {
-      throw new Error('Game date cannot be in the future');
-    }
+    // Validation is now handled in GameDate value object
   }
 
   private determineResult(): GameResult {
@@ -58,7 +57,7 @@ export class Game {
     return this._id;
   }
 
-  get gameDate(): Date {
+  get gameDate(): GameDate {
     return this._gameDate;
   }
 
