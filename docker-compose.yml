@@ -51,7 +51,6 @@ services:
       - .env
     environment:
       NODE_ENV: development
-      DATABASE_URL: ${DATABASE_URL}
     ports:
       - '3001:3000'
     volumes:
