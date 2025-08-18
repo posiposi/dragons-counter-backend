@@ -57,7 +57,7 @@ export class GameAdapter implements GamePort {
   }
 
   async findById(gameId: GameId): Promise<Game | null> {
-    const game = await this.prisma.game.findUnique({
+    const game = await this.prisma.game.findFirst({
       where: {
         id: gameId.value,
         deletedAt: null,
