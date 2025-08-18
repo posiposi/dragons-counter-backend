@@ -1,7 +1,11 @@
 #!/bin/sh
 set -e
 
+if [ -f .env.test ]; then
+    export $(cat .env.test | grep -v '^#' | xargs)
+fi
+
 echo "Initializing test database..."
-DATABASE_URL="mysql://dragons_user:dragons_password@test-database:3306/dragons_counter_test" npx prisma db push --skip-generate
+npx prisma db push --skip-generate
 
 echo "Test database initialized successfully"
