@@ -223,5 +223,126 @@ describe('GameAdapter Integration Tests', () => {
 
       expect(result).toEqual([]);
     });
+
+    it('should exclude soft-deleted games', async () => {
+      await prismaService.game.deleteMany();
+
+      const activeGameId = randomUUID();
+      const deletedGameId = randomUUID();
+
+      await prismaService.game.create({
+        data: {
+          id: activeGameId,
+          gameDate: new Date('2024-04-01'),
+          opponent: '横浜DeNAベイスターズ',
+          stadium: 'バンテリンドーム',
+          dragonsScore: 5,
+          opponentScore: 3,
+          result: GameResultValue.WIN,
+          notes: 'アクティブな試合',
+        },
+      });
+
+      await prismaService.game.create({
+        data: {
+          id: deletedGameId,
+          gameDate: new Date('2024-04-02'),
+          opponent: '阪神タイガース',
+          stadium: '甲子園',
+          dragonsScore: 2,
+          opponentScore: 7,
+          result: GameResultValue.LOSE,
+          notes: '削除された試合',
+          deletedAt: new Date(),
+        },
+      });
+
+      const adapter = new GameAdapter(prismaClient);
+      const result = await adapter.findAll();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].id.value).toBe(activeGameId);
+      expect(result[0].opponent.value).toBe('横浜DeNAベイスターズ');
+    });
+  });
+
+  describe('findById and softDelete', () => {
+    let testGameId: string;
+    let testGameIdVO: GameId;
+    let nonExistentGameIdVO: GameId;
+    let adapter: GameAdapter;
+
+    beforeEach(async () => {
+      await prismaService.game.deleteMany();
+
+      testGameId = '123e4567-e89b-12d3-a456-426614174000';
+      testGameIdVO = new GameId(testGameId);
+      nonExistentGameIdVO = new GameId('123e4567-e89b-12d3-a456-426614174999');
+      adapter = new GameAdapter(prismaClient);
+
+      await prismaService.game.create({
+        data: {
+          id: testGameId,
+          gameDate: new Date('2024-04-01'),
+          opponent: '横浜DeNAベイスターズ',
+          stadium: 'バンテリンドーム',
+          dragonsScore: 5,
+          opponentScore: 3,
+          result: GameResultValue.WIN,
+          notes: 'テスト試合',
+        },
+      });
+    });
+
+    describe('findById', () => {
+      it('should return a game when it exists', async () => {
+        const result = await adapter.findById(testGameIdVO);
+
+        expect(result).not.toBeNull();
+        expect(result?.id.value).toBe(testGameId);
+        expect(result?.opponent.value).toBe('横浜DeNAベイスターズ');
+        expect(result?.dragonsScore.value).toBe(5);
+        expect(result?.result.value).toBe(GameResultValue.WIN);
+      });
+
+      it('should return null when game does not exist', async () => {
+        const result = await adapter.findById(nonExistentGameIdVO);
+
+        expect(result).toBeNull();
+      });
+    });
+
+    describe('softDelete', () => {
+      it('should soft-delete an existing game', async () => {
+        const result = await adapter.softDelete(testGameIdVO);
+
+        expect(result).toBe(true);
+
+        const deletedGame = await prismaService.game.findUnique({
+          where: { id: testGameId },
+        });
+        expect(deletedGame?.deletedAt).not.toBeNull();
+      });
+
+      it('should return null for soft-deleted game in findById', async () => {
+        await adapter.softDelete(testGameIdVO);
+
+        const result = await adapter.findById(testGameIdVO);
+        expect(result).toBeNull();
+      });
+
+      it('should return true when soft-deleting already deleted game', async () => {
+        await adapter.softDelete(testGameIdVO);
+
+        const result = await adapter.softDelete(testGameIdVO);
+        expect(result).toBe(true);
+      });
+
+      it('should return false when game does not exist', async () => {
+        const result = await adapter.softDelete(nonExistentGameIdVO);
+
+        expect(result).toBe(false);
+      });
+    });
   });
 });

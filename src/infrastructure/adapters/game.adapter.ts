@@ -45,12 +45,47 @@ export class GameAdapter implements GamePort {
 
   async findAll(): Promise<Game[]> {
     const games = await this.prisma.game.findMany({
+      where: {
+        deletedAt: null,
+      },
       orderBy: {
         gameDate: 'desc',
       },
     });
 
     return games.map((game) => this.toDomainEntity(game));
+  }
+
+  async findById(gameId: GameId): Promise<Game | null> {
+    const game = await this.prisma.game.findUnique({
+      where: {
+        id: gameId.value,
+        deletedAt: null,
+      },
+    });
+
+    if (!game) {
+      return null;
+    }
+
+    return this.toDomainEntity(game);
+  }
+
+  async softDelete(gameId: GameId): Promise<boolean> {
+    try {
+      await this.prisma.game.update({
+        where: {
+          id: gameId.value,
+        },
+        data: {
+          deletedAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   private toDomainEntity(data: PrismaGame): Game {
