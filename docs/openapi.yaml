@@ -119,6 +119,7 @@ paths:
       tags:
         - Games
       summary: 観戦試合削除
+      description: 指定された観戦試合を論理削除します。物理的にデータは削除されず、deletedAtフィールドに削除日時が記録されます。
       operationId: deleteGame
       parameters:
         - name: gameId
@@ -132,6 +133,12 @@ paths:
           description: 削除成功
         '404':
           description: 見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: サーバーエラー
           content:
             application/json:
               schema:

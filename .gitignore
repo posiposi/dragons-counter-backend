@@ -134,3 +134,9 @@ schemaspy-output/
 # MySQL data
 mysql-data/
 /generated/prisma
+
+# issue templates
+issue-body-template.md
+
+# pull request templates
+pull-request-body-template.md

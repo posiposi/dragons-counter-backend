@@ -14,8 +14,12 @@ COPY . .
 
 RUN npm run build
 
+COPY scripts/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 3000
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["npm", "run", "start:dev"]
 
 FROM node:24.6.0-alpine AS production
