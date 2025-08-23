@@ -118,7 +118,7 @@ paths:
     delete:
       tags:
         - Games
-      summary: 観戦試合削除（論理削除）
+      summary: 観戦試合削除
       description: 指定された観戦試合を論理削除します。物理的にデータは削除されず、deletedAtフィールドに削除日時が記録されます。
       operationId: deleteGame
       parameters:
