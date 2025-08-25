@@ -17,7 +17,7 @@ RUN npm run build
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 3443
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["npm", "run", "start:dev"]
@@ -33,6 +33,6 @@ RUN npm ci --only=production
 
 COPY --from=development /app/dist ./dist
 
-EXPOSE 3000
+EXPOSE 3443
 
 CMD ["node", "dist/main"]
